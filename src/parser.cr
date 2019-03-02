@@ -35,13 +35,13 @@ module Blueprint
     end
 
     # is this a book or a single blueprint
-    if wrapper.book_present?
-      return wrapper.book.as(Book)
-    elsif wrapper.blueprint_present?
-      return wrapper.blueprint.as(Blueprint)
+    if book = wrapper.book
+      return book
+    elsif blueprint = wrapper.blueprint
+      return blueprint
+    else
+      raise "Invalid blueprint string (missing blueprint or book)"
     end
-
-    raise "Invalid blueprint string (missing blueprint or book)"
   end
 
   def self.export(blueprint : Book | Blueprint, io)

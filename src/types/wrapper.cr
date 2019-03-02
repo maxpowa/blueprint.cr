@@ -1,8 +1,8 @@
 module Blueprint
   class Wrapper
     JSON.mapping(
-      blueprint: {type: Blueprint?, presence: true},
-      book: {key: "blueprint_book", type: Book?, presence: true},
+      blueprint: Blueprint?,
+      book: {key: "blueprint_book", type: Book?},
     )
 
     def initialize(blueprint : Blueprint)
