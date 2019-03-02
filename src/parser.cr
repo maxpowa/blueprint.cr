@@ -6,6 +6,18 @@ require "zlib"
 require "./types/*"
 
 module Blueprint
+  def self.decode(str)
+    return IO::Memory.new Base64.decode(str)
+  end
+
+  def self.inflate(io)
+    return Zlib::Reader.new(io).gets_to_end
+  end
+
+  def self.parse(str : String)
+    return self.parse(IO::Memory.new str)
+  end
+
   def self.parse(io)
     begin
       # version byte
@@ -18,11 +30,11 @@ module Blueprint
       raise "Unsupported blueprint version"
     end
 
-    # rest of stream is base64 encoded
     begin
-      payload = IO::Memory.new Base64.decode(io.gets_to_end)
+      # rest of stream is base64 encoded
+      payload = self.decode(io.gets_to_end)
       # and zlib deflated
-      json = Zlib::Reader.new(payload).gets_to_end
+      json = self.inflate(payload)
     rescue
       raise "Invalid blueprint string (bad encoding)"
     end
@@ -42,9 +54,5 @@ module Blueprint
     else
       raise "Invalid blueprint string (missing blueprint or book)"
     end
-  end
-
-  def self.export(blueprint : Book | Blueprint, io)
-    wrapper = Wrapper.new(blueprint).export(io)
   end
 end

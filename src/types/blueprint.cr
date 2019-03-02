@@ -1,8 +1,8 @@
 module Blueprint
   class Blueprint
     JSON.mapping(
-      item: { type: String, default: "blueprint" },
-      label: { type: String, default: "Blueprint" },
+      item: {type: String, default: "blueprint"},
+      label: {type: String, default: "Blueprint"},
       label_color: Color?,
       entities: Array(Entity)?,
       tiles: Array(Tile)?,
@@ -11,7 +11,7 @@ module Blueprint
     )
 
     def export(io)
-        Wrapper.new(self).export(io)
+      Wrapper.new(self).export(io)
     end
   end
 end

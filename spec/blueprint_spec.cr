@@ -5,9 +5,14 @@ EXAMPLE_BLUEPRINT = "0eNrNVctu2zAQ/JV2z1Jgx1KcCL300FuBFr30UAQCJW9sInyBDzuCoX/vkp
 
 describe Blueprint do
   it "parses well formed blueprints" do
-    io = IO::Memory.new EXAMPLE_BLUEPRINT
+    result = Blueprint.parse(EXAMPLE_BLUEPRINT)
 
-    result = Blueprint.parse(io)
+    result.should be_a(Blueprint::Blueprint)
+  end
+
+  it "parses large well formed blueprints" do
+    file = File.new("spec/example_blueprint.txt")
+    result = Blueprint.parse(file)
 
     result.should be_a(Blueprint::Blueprint)
   end
@@ -20,32 +25,25 @@ describe Blueprint do
   end
 
   it "raises when unsupported version is passed" do
-    io = IO::Memory.new "2invalid="
-
     expect_raises(Exception, "Unsupported blueprint version") do
-      Blueprint.parse(io)
+      Blueprint.parse("2invalid=")
     end
   end
 
   it "raises when invalid string is passed" do
-    io = IO::Memory.new "0invalid="
-
     expect_raises(Exception, "Invalid blueprint string (bad encoding)") do
-      Blueprint.parse(io)
+      Blueprint.parse("0invalid=")
     end
   end
 
   it "raises when decoded blueprint does not contain anything" do
-    io = IO::Memory.new "0invalid="
-
-    expect_raises(Exception, "Invalid blueprint string (bad encoding)") do
-      Blueprint.parse(io)
+    expect_raises(Exception, "Invalid blueprint string (missing blueprint or book)") do
+      Blueprint.parse("0eJyrrgUAAXUA+Q==")
     end
   end
 
   it "exports an identical string to input" do
-    io = IO::Memory.new EXAMPLE_BLUEPRINT
-    expected = Blueprint.parse(io)
+    expected = Blueprint.parse(EXAMPLE_BLUEPRINT)
 
     output = IO::Memory.new
     expected.export(output)
