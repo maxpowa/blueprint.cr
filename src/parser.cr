@@ -6,7 +6,7 @@ require "zlib"
 require "./types/*"
 
 module Blueprint
-  def self.from_io(io)
+  def self.parse(io)
     begin
       # version byte
       version = io.read_byte

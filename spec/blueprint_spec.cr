@@ -7,14 +7,14 @@ describe Blueprint do
   it "parses well formed blueprints" do
     io = IO::Memory.new EXAMPLE_BLUEPRINT
 
-    result = Blueprint.from_io(io)
+    result = Blueprint.parse(io)
 
     result.should be_a(Blueprint::Blueprint)
   end
 
   it "parses well formed blueprint books" do
     file = File.new("spec/example_book.txt")
-    result = Blueprint.from_io(file)
+    result = Blueprint.parse(file)
 
     result.should be_a(Blueprint::Book)
   end
@@ -23,7 +23,7 @@ describe Blueprint do
     io = IO::Memory.new "2invalid="
 
     expect_raises(Exception, "Unsupported blueprint version") do
-      Blueprint.from_io(io)
+      Blueprint.parse(io)
     end
   end
 
@@ -31,7 +31,7 @@ describe Blueprint do
     io = IO::Memory.new "0invalid="
 
     expect_raises(Exception, "Invalid blueprint string (bad encoding)") do
-      Blueprint.from_io(io)
+      Blueprint.parse(io)
     end
   end
 
@@ -39,19 +39,19 @@ describe Blueprint do
     io = IO::Memory.new "0invalid="
 
     expect_raises(Exception, "Invalid blueprint string (bad encoding)") do
-      Blueprint.from_io(io)
+      Blueprint.parse(io)
     end
   end
 
   it "exports an identical string to input" do
     io = IO::Memory.new EXAMPLE_BLUEPRINT
-    expected = Blueprint.from_io(io)
+    expected = Blueprint.parse(io)
 
     output = IO::Memory.new
     expected.export(output)
 
     output.rewind
 
-    Blueprint.from_io(output).to_json.should eq(expected.to_json)
+    Blueprint.parse(output).to_json.should eq(expected.to_json)
   end
 end
