@@ -48,7 +48,7 @@ describe Blueprint do
     expected = Blueprint.from_io(io)
 
     output = IO::Memory.new
-    Blueprint.export(expected.as(Blueprint::Blueprint), output)
+    expected.export(output)
 
     output.rewind
 
