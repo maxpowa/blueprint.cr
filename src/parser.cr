@@ -10,11 +10,12 @@ module Blueprint
     begin
       # version byte
       version = io.read_byte
-      if version && version.chr != '0'
-        raise "Unsupported blueprint version"
-      end
     rescue
       raise "Invalid blueprint string (unable to read version)"
+    end
+
+    if version && version.chr != '0'
+      raise "Unsupported blueprint version"
     end
 
     # rest of stream is base64 encoded
@@ -35,9 +36,9 @@ module Blueprint
 
     # is this a book or a single blueprint
     if wrapper.book_present?
-      return wrapper.book
+      return wrapper.book.as(Book)
     elsif wrapper.blueprint_present?
-      return wrapper.blueprint
+      return wrapper.blueprint.as(Blueprint)
     end
 
     raise "Invalid blueprint string (missing blueprint or book)"
