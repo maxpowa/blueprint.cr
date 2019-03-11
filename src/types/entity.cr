@@ -3,10 +3,10 @@ require "random"
 module Blueprint
   class Entity
     JSON.mapping(
-      entity_number: Int16,
+      entity_number: UInt32,
       name: String,
       position: Position,
-      direction: UInt8?,                             # Maybe not a UInt8, not sure
+      direction: UInt8?,                             # Maybe not a UInt8 N NE E SE S SW W NW
       connections: Connections?,                     # Circuit connections
       control_behavior: JSON::Any?,                  # Type of entity this should behave as (maybe leave blank)
       items: Hash(String, UInt32)?,                  # Modules (item-name, count)
@@ -18,7 +18,7 @@ module Blueprint
       output_priority: String?,                      # Splitter (left/right/none)
       filter: String?,                               # Splitter
       filters: Array(Filter)?,                       # Filter Inserter
-      override_stack_size: UInt8?,                   # Inserter (maybe not UInt8)
+      override_stack_size: UInt32?,                  # Inserter
       drop_position: Position?,                      # Inserter
       pickup_position: Position?,                    # Inserter
       request_filters: Array(Filter)?,               # Logistic Chests
