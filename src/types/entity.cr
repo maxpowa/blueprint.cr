@@ -1,12 +1,12 @@
-require "random"
-
 module Blueprint
   class Entity
+    @@index = 0_u32 # Actually 1-based but increment behavior in initialize means this is always > 0
+
     JSON.mapping(
       entity_number: UInt32,
       name: String,
       position: Position,
-      direction: UInt8?,                             # Maybe not a UInt8 N NE E SE S SW W NW
+      direction: Direction?,                         # N NE E SE S SW W NW
       connections: Connections?,                     # Circuit connections
       control_behavior: JSON::Any?,                  # Type of entity this should behave as (maybe leave blank)
       items: Hash(String, UInt32)?,                  # Modules (item-name, count)
@@ -30,10 +30,13 @@ module Blueprint
       color: Color?,                                 # Train Stations/EntityWithForce/EntityWithOwner
       station: String?,                              # Train Station name
     )
-  end
 
-  def initialize(@name : String, @position : Position)
-    r = Random.new
-    @entity_number = r.next_int
+    def initialize(@name : String, @position : Position, @direction : Direction)
+      @entity_number = @@index += 1
+    end
+
+    def initialize(@name : String, @position : Position)
+      @entity_number = @@index += 1
+    end
   end
 end

@@ -45,11 +45,26 @@ describe Blueprint do
   it "exports an identical string to input" do
     expected = Blueprint.parse(EXAMPLE_BLUEPRINT)
 
-    output = IO::Memory.new
-    expected.export(output)
-
-    output.rewind
+    output = expected.export
 
     Blueprint.parse(output).to_json.should eq(expected.to_json)
+  end
+
+  it "consistently generates new blueprints" do
+    actual = Blueprint::Blueprint.new([
+      Blueprint::Entity.new("offshore-pump", Blueprint::Position.new(0_f64, 0_f64)),
+    ]).export
+
+    Blueprint.parse(actual).to_json.should eq("{\"item\":\"blueprint\",\"label\":\"Blueprint\",\"entities\":[{\"entity_number\":1,\"name\":\"offshore-pump\",\"position\":{\"x\":0.0,\"y\":0.0}}]}")
+  end
+
+  it "consistently generates new books" do
+    actual = Blueprint::Book.new([
+      Blueprint::Blueprint.new([
+        Blueprint::Entity.new("offshore-pump", Blueprint::Position.new(0_f64, 0_f64)),
+      ]),
+    ]).export
+
+    Blueprint.parse(actual).to_json.should eq("{\"item\":\"blueprint\",\"label\":\"Blueprint\",\"blueprints\":[{\"index\":0,\"blueprint\":{\"item\":\"blueprint\",\"label\":\"Blueprint\",\"entities\":[{\"entity_number\":2,\"name\":\"offshore-pump\",\"position\":{\"x\":0.0,\"y\":0.0}}]}}]}")
   end
 end

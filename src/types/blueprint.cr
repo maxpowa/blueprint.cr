@@ -10,6 +10,23 @@ module Blueprint
       version: UInt64?,
     )
 
+    setter item : String = "blueprint"
+    setter label : String = "Blueprint"
+    setter label_color
+    setter entities
+    setter tiles
+    setter icons
+
+    def initialize(@entities)
+    end
+
+    def initialize(@label, @entities)
+    end
+
+    def export
+      Wrapper.new(self).export
+    end
+
     def export(io)
       Wrapper.new(self).export(io)
     end

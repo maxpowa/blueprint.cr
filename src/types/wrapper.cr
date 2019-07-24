@@ -26,6 +26,11 @@ module Blueprint
       end
 
       io.write "0#{payload}".to_slice
+      io
+    end
+
+    def export
+      export(IO::Memory.new).rewind
     end
   end
 end
